@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { List } from './components/List';
+import { useList } from './hooks/useList';
+import { useInput } from './hooks/useInput';
+import { useMessage } from './hooks/useMessage';
+import { TextFiled } from './components/TextFiled';
 
-function App() {
+export type Item = {
+  id: string;
+  text: string;
+  checked: boolean;
+};
+
+export const App = () => {
+  const [list, setList] = useList();
+  const [input, setInput] = useInput();
+  const [message, setMessage] = useMessage();
+
+  // jsx
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      {/* テーブル */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#cececece',
+          marginTop: '36px',
+          padding: '16px 48px',
+          borderRadius: '8px',
+          width: '480px',
+        }}
+      >
+        <header style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
+          <h1 style={{ fontSize: '24px', margin: '0' }}>TODO</h1>
+          <TextFiled
+            input={input}
+            setInput={setInput.handleSetInput}
+            handleEnter={() => setList.addTodo(setMessage, input, setInput.clearInput)}
+          />
+        </header>
+        <p style={{ color: 'red' }}>{message}</p>
+        {/* List */}
+        <List
+          list={list}
+          updateCheckState={setList.updateCheckState}
+          deleteItem={setList.deleteItem}
+        />
+      </div>
     </div>
   );
-}
-
-export default App;
+};
